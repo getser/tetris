@@ -174,13 +174,64 @@ class pole(object):
         
 class figure(object):
     def __init__(self, matrix):
-        pass
+        self._fig = matrix
         
     def get_figure(self):
-        pass
+        return self._fig    
+        
+    def __str__(self):
+        res = ""
+        for s in self.get_figure():
+            res += (str(s) + '\n')
+        return res[:-1]
         
     def rotate_r(self):
-        pass
- 
+        res_rows = len(self._fig[0])
+        res_cols = len(self._fig)
+        res = [[0 for col in range(res_cols)] for row in range(res_rows)]
+        
+        for row in range(len(self._fig)):
+            for col in range(len(self._fig[0])):
+                res[col][(len(res[0]) - 1) - row] = self._fig[row][col]       
+        self._fig = res
+    
     def rotate_l(self):
-        pass
+        res_rows = len(self._fig[0])
+        res_cols = len(self._fig)
+        res = [[0 for col in range(res_cols)] for row in range(res_rows)]
+        
+        for row in range(len(self._fig)):
+            for col in range(len(self._fig[0])):
+                res[(len(res) - 1) - col][row] = self._fig[row][col]       
+        self._fig = res
+            
+
+# T_fig.rotate_r()
+# print T_fig
+# print
+
+#T_fig.rotate_l()
+#print T_fig
+#print
+
+        
+# T_fig = figure(init_figures['T'])
+# print T_fig
+# print
+
+
+# T_fig.rotate_l()
+# print T_fig  
+# print
+
+# T_fig.rotate_l()
+# print T_fig
+# print
+
+# T_fig.rotate_r()
+# print T_fig
+# print
+
+#T_fig.rotate_l()
+#print T_fig
+#print
