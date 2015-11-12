@@ -9,6 +9,10 @@ init_figures = {'L' : [[1,0],[1,0],[1,1]],
             'E' : [[1,0], [1,1],[1,0]],
             'O' : [[1,1],[1,1]]}
 
+direction_steps = {'right':(0,1), 
+                   'left':(0,-1),
+                   'down':(1,0)}
+
 class pole(object):
     """
     Creates a grid "pole", where everything is running.
@@ -203,6 +207,36 @@ class pole(object):
                 return False
                 
         return True
+
+    def move_figure(self, direction):
+        """
+        Tests if current figure is able to move to given direction. 
+        (Uses can_move_invariant.)
+        If is able to move - changes current position for a step to given direction.
+        """
+        if self.current_pos:
+            if can_move_invariant(self.current_fig, self.current_pos, direction):
+                step = direction_steps[direction]
+                self.current_pos[0] += step[0]
+                self.current_pos[1] += step[1]
+            else:
+                print '"self.current_pos" is absend' 
+        
+    def insert_figure(self):
+        """
+        Inserts current figure to "raw" grid at current position.
+        """
+        if self.current_pos:
+            for row in xrange(len(self.current_fig.get_figure())):
+                for col in xrange(len(self.current_fig.get_figure()[0])):
+                    if self.current_fig.get_figure()[row][col] == 1:
+                        pos_row = row + self.current_pos[0]
+                        pos_col = col + self.current_pos[1]
+                        assert self._raw_grid[pos_row][pos_col] == 0
+                        print "trying to insert at pos:", (pos_row, pos_col)
+                        self._raw_grid[pos_row][pos_col] = 1
+        else:
+            print '"self.current_pos" is absend' 
 
         
 
