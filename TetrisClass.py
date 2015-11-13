@@ -8,7 +8,7 @@ init_figures = {'L' : [[1,0],[1,0],[1,1]],
             'l' : [[1],[1],[1],[1]],
             'E' : [[1,0], [1,1],[1,0]],
             'O' : [[1,1],[1,1]]}
-
+            
 direction_steps = {'right':(0,1), 
                    'left':(0,-1),
                    'down':(1,0)}
@@ -26,7 +26,7 @@ class pole(object):
                              for row in range(self._h)] 
         self.next_fig = None
         self.current_fig = None
-        self.state = "stop"  # indicates if current figure can move down
+        self.state = "run"  # indicates if current figure can move down
         self.current_pos = None
 
     def get_raw_grid(self):
@@ -106,7 +106,7 @@ class pole(object):
         """
         row = 0
         col = (self._w - len(figure.get_figure()[0]))/2
-        return (row, col)
+        return [row, col]
     
     def can_move_invariant(self, figure, current_pos, direction):
         """
@@ -119,6 +119,7 @@ class pole(object):
             step = (0, 1)
             
             if current_pos[1] + len(figure.get_figure()[0]) + 1 > self._w:
+                print "Can't move out of grid."
                 return False
                 
             num_shape_cells = len(figure.get_figure())
@@ -144,6 +145,7 @@ class pole(object):
             step = (0, -1)
             
             if current_pos[1] - 1 < 0:
+                print "Can't move out of grid."
                 return False            
             
             num_shape_cells = len(figure.get_figure())
@@ -170,6 +172,7 @@ class pole(object):
             
             if current_pos[0] + len(figure.get_figure()) + 1 > self._h:
                 self.state = "stop"
+                print "It's bottom here :)"
                 return False            
             
             num_shape_cells = len(figure.get_figure()[0])
@@ -192,11 +195,9 @@ class pole(object):
                                     to_append = False
                             if to_append:
                                 tested_shape.append ((row, col))
-#                        tested_cols.remove(col)
-        
-        print tested_shape
-        print num_shape_cells
-        
+                                
+#        print tested_shape
+#        print num_shape_cells
         assert num_shape_cells == len(tested_shape) 
         
         for cell in tested_shape:
@@ -204,8 +205,10 @@ class pole(object):
             tested_col = current_pos[1] + cell[1] + step[1]
             if self._raw_grid[tested_row][tested_col] == 1:
                 if direction == 'down': self.state = "stop"
+                print "Stopped with not empty cell."
                 return False
-                
+        
+        #print "Is able to move " + direction + "!"
         return True
 
     def move_figure(self, direction):
@@ -215,7 +218,7 @@ class pole(object):
         If is able to move - changes current position for a step to given direction.
         """
         if self.current_pos:
-            if can_move_invariant(self.current_fig, self.current_pos, direction):
+            if self.can_move_invariant(self.current_fig, self.current_pos, direction):
                 step = direction_steps[direction]
                 self.current_pos[0] += step[0]
                 self.current_pos[1] += step[1]
@@ -233,11 +236,26 @@ class pole(object):
                         pos_row = row + self.current_pos[0]
                         pos_col = col + self.current_pos[1]
                         assert self._raw_grid[pos_row][pos_col] == 0
-                        print "trying to insert at pos:", (pos_row, pos_col)
+                        #print "trying to insert at pos:", (pos_row, pos_col)
                         self._raw_grid[pos_row][pos_col] = 1
         else:
-            print '"self.current_pos" is absend' 
-
+            print 'no "self.current_pos"'
+            
+            
+            
+    def run(self):
+        """
+        Make things roll ones.
+        """
+        self.current_fig = self.curr_fig()
+        self.current_pos = self.start_pos(self.current_fig)
+        d_move = 'down'
+        while self.state == "run":
+            self.move_figure(d_move)
+        else:
+            self.insert_figure()
+            self.state = "run"
+        
         
 
         
@@ -291,92 +309,46 @@ class figure(object):
         self._fig = res
             
 
-# T_fig.rotate_r()
-# print T_fig
-# print
-
-#T_fig.rotate_l()
-#print T_fig
-#print
-
-        
-# T_fig = figure(init_figures['T'])
-# print T_fig
-# print
-
-
-# T_fig.rotate_l()
-# print T_fig  
-# print
-
-# T_fig.rotate_l()
-# print T_fig
-# print
-
-# T_fig.rotate_r()
-# print T_fig
-# print
-
-#T_fig.rotate_l()
-#print T_fig
-#print
-
-
-# l_fig = figure(init_figures['l'])
-# print l_fig
-# print
-
-# l_fig.rotate_l()
-# print l_fig
-# print
-
-# l_fig.rotate_l()
-# print l_fig
-# print
-
 
         
 t = pole( 40, 15 )
 
-t.current_fig = t.curr_fig()
-print t.current_fig
-print
-# print t.current_fig.get_figure()[0]
+# print t
 # print
-
-start = t.start_pos(t.current_fig)
-print start
+t.run()
+print t
+print
+t.run()
+print t
+print
+t.run()
+print t
 print
 
-#start = 36, 6
-#move = 'left'
-move = 'down'
-print start
-print move
-print
 
-print t.can_move_invariant(t.current_fig, start, move)
-print
-# print t.can_move_invariant(t.current_fig, start, 'right')
-# print
-# print t.can_move_invariant(t.current_fig, start, 'down')
-# print
-
-
-#print t.next_fig
-#print
-
-
-# t.current_fig.rotate_r()
+# t.current_fig = t.curr_fig()
 # print t.current_fig
 # print
 
-# t.current_fig.rotate_l()
-# print t.current_fig
+# position = t.start_pos(t.current_fig)
+# print position
 # print
 
-# E_fig.rotate_r()
-# print E_fig
+# position = 36, 6
+# move = 'left'
+# move = 'down'
+# print position
+# print move
 # print
 
-#print t
+# print t.can_move_invariant(t.current_fig, position, move)
+# print
+
+# print '1'
+# t.current_pos = position
+# t.insert_figure()
+
+# print t
+
+
+
