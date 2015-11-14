@@ -84,6 +84,7 @@ class pole(object):
         """
         Creates new next and current figures.
         """
+#        print "Im HERE, curr_fig"
         shape = init_figures[random.choice(init_figures.keys())]
         fig = figure(shape)
         rotate = random.randrange(4)
@@ -100,6 +101,7 @@ class pole(object):
             
             
     def start_pos(self, figure):
+#        print "Start_pos running"
         """
         Returns start_pos - tuple of row and col of grid.
         'start_pos' is where leftmost upper corner (0.0) of current figure be placed at start.
@@ -119,7 +121,7 @@ class pole(object):
             step = (0, 1)
             
             if current_pos[1] + len(figure.get_figure()[0]) + 1 > self._w:
-                print "Can't move out of grid."
+#                print "Can't move out of grid."
                 return False
                 
             num_shape_cells = len(figure.get_figure())
@@ -145,7 +147,7 @@ class pole(object):
             step = (0, -1)
             
             if current_pos[1] - 1 < 0:
-                print "Can't move out of grid."
+#                print "Can't move out of grid."
                 return False            
             
             num_shape_cells = len(figure.get_figure())
@@ -172,7 +174,7 @@ class pole(object):
             
             if current_pos[0] + len(figure.get_figure()) + 1 > self._h:
                 self.state = "stop"
-                print "It's bottom here :)"
+#                print "It's bottom here :)"
                 return False            
             
             num_shape_cells = len(figure.get_figure()[0])
@@ -205,7 +207,7 @@ class pole(object):
             tested_col = current_pos[1] + cell[1] + step[1]
             if self._raw_grid[tested_row][tested_col] == 1:
                 if direction == 'down': self.state = "stop"
-                print "Stopped with not empty cell."
+#                print "Stopped with not empty cell."
                 return False
         
         #print "Is able to move " + direction + "!"
@@ -222,8 +224,8 @@ class pole(object):
                 step = direction_steps[direction]
                 self.current_pos[0] += step[0]
                 self.current_pos[1] += step[1]
-            else:
-                print '"self.current_pos" is absend' 
+#            else:
+#                print '"self.current_pos" is absend' 
         
     def insert_figure(self):
         """
@@ -239,14 +241,22 @@ class pole(object):
                         #print "trying to insert at pos:", (pos_row, pos_col)
                         self._raw_grid[pos_row][pos_col] = 1
         else:
-            print 'no "self.current_pos"'
+#            print 'no "self.current_pos"'
             
-            
+
+    def run_down(self):
+        """
+        Make figure fall fast.
+        """
+        while self.state == "run":
+            self.move_figure('down')
+
             
     def run(self):
         """
         Make things roll ones.
         """
+        print "Runing" 
         self.current_fig = self.curr_fig()
         self.current_pos = self.start_pos(self.current_fig)
         d_move = 'down'
@@ -307,48 +317,6 @@ class figure(object):
             for col in range(len(self._fig[0])):
                 res[(len(res) - 1) - col][row] = self._fig[row][col]       
         self._fig = res
-            
-
-
-        
-t = pole( 40, 15 )
-
-# print t
-# print
-t.run()
-print t
-print
-t.run()
-print t
-print
-t.run()
-print t
-print
-
-
-# t.current_fig = t.curr_fig()
-# print t.current_fig
-# print
-
-# position = t.start_pos(t.current_fig)
-# print position
-# print
-
-# position = 36, 6
-# move = 'left'
-# move = 'down'
-# print position
-# print move
-# print
-
-# print t.can_move_invariant(t.current_fig, position, move)
-# print
-
-# print '1'
-# t.current_pos = position
-# t.insert_figure()
-
-# print t
 
 
 
