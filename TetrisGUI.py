@@ -14,6 +14,18 @@ HEITH = field_height * BLOCK_elem_width
 
 field = tcg.pole(field_height, field_width)
 
+# field.run()# test string
+
+# field.current_fig = field.curr_fig() # test string
+# print 'field.current_fig' # test string
+# print field.current_fig # test string
+# print 'field.next_fig' # test string
+# print field.next_fig # test string
+# field.current_pos = field.start_pos(field.current_fig) # test string
+# print 'field.current_pos' # test string
+# print field.current_pos # test string
+
+
 
 str_wind_size = str(field_width * BLOCK_elem_width) + 'x' + str(field_height * BLOCK_elem_width)
 root = tk.Tk()  # defines the main window, assigned variable name 'root'
@@ -28,17 +40,19 @@ root.geometry(str_wind_size+"+100+100")
   # """
 # root.geometry(str_wind_size)
 
+frame1 = tk.Frame(root)
+
 frame1.grid(row = 0, column = 0)
 
-canvas = Canvas(root, width = field_width*BLOCK_elem_width, height = field_height*BLOCK_elem_width, bg = "#1C1C1C")
+canvas = tk.Canvas(root, width = field_width*BLOCK_elem_width, \
+                   height = field_height*BLOCK_elem_width, bg = "#1C1C1C")
 canvas.grid(row = 2, column = 0)
 
 # #canvas.pack(fill='both', expand=True)
 
-label1 = Label(frame1, text = "Tetris").grid(row=0,column=0, sticky="nw")
-Button1 = Button(frame1,text = "New game").grid(row = 1,column = 0, sticky = "we")
+label1 = tk.Label(frame1, text = "Tetris").grid(row=0,column=0, sticky="nw")
 
-
+FILL_NEXT_BLOCK_CIRCLES = "grey"   # color fill for unselected circles
 FILL_BLOCK_CIRCLES = "green"   # color fill for unselected circles
 FILL_POLE_CIRCLES = "blue"   # color fill for unselected circles
 
@@ -46,70 +60,129 @@ FILL_POLE_CIRCLES = "blue"   # color fill for unselected circles
 # rectang = canvas.create_rectangle(80, 80, 120, 120, fill="blue")
 
 def leftKey(event):
+    print "< key pressed"
     if field.current_pos:
         field.move_figure('left')
     
 def rightKey(event):
+    print "< key pressed"
     if field.current_pos:
         field.move_figure('right')
     
 def upKey(event):
+    print "^ key pressed"
     if field.current_fig:
         field.current_fig.rotate_r()
     
 def downKey(event):
-    global speed
+    print "Down key pressed"    
     if field.current_pos:
         time.sleep(0.25)
         
 def spKey(event):
+    print "_____ key pressed"
     if field.current_fig:
         field.current_fig, field.next_fig = field.next_fig, field.current_fig 
 
-
 frame1.focus_set()
 
-block = field.get_copy_grid()
-for row in xrange(len(block)):
-    for col in xrange(len(block[0])):
-        if block[row][col] == 1:
-            paint_pos_row = field.current_pos[0] + row
-            paint_pos_col = field.current_pos[0] + col
-            ball = canvas.create_oval(((paint_pos_col - 1) * BLOCK_elem_width)/2,\
-                                         paint_pos_row * BLOCK_elem_width,\
-                                       ((paint_pos_col + 1) * BLOCK_elem_width)/2,\
-                                        (paint_pos_row + 1) * BLOCK_elem_width,\
-                                         width = 2, fill = FILL_POLE_CIRCLES)   
 
-if field.current_fig:
-    block = field.current_fig.get_figure()
+def paint_pole():
+    print "Painting pole"
+    #ball = canvas.create_oval(((15 - 1) * BLOCK_elem_width)/2, 0 * BLOCK_elem_width,((15 + 1) * BLOCK_elem_width)/2,(0 + 1) * BLOCK_elem_width, width = 2, fill = FILL_POLE_CIRCLES)
+    block = field.get_copy_grid()
     for row in xrange(len(block)):
         for col in xrange(len(block[0])):
+            paint_pos_row = row
+            paint_pos_col = col            
             if block[row][col] == 1:
-                paint_pos_row = field.current_pos[0] + row
-                paint_pos_col = field.current_pos[0] + col
-                ball = canvas.create_oval( ((paint_pos_col - 1) * BLOCK_elem_width)/2, \
-                                            paint_pos_row * BLOCK_elem_width, \
-                                            ((paint_pos_col + 1) * BLOCK_elem_width)/2, \
-                                            (paint_pos_row + 1) * BLOCK_elem_width, \
-                                            width = 2, fill = FILL_BLOCK_CIRCLES)
+                ball = canvas.create_oval(((paint_pos_col) * BLOCK_elem_width),\
+                                             paint_pos_row * BLOCK_elem_width,\
+                                           ((paint_pos_col + 1) * BLOCK_elem_width),\
+                                            (paint_pos_row + 1) * BLOCK_elem_width,\
+                                             width = 2, fill = FILL_POLE_CIRCLES)
+            else:
+                ball = canvas.create_rectangle(((paint_pos_col) * BLOCK_elem_width),\
+                                             paint_pos_row * BLOCK_elem_width,\
+                                           ((paint_pos_col + 1) * BLOCK_elem_width),\
+                                            (paint_pos_row + 1) * BLOCK_elem_width,\
+                                             width = 2, fill = "#1C1C1C")
 
-while True:
-#    block_pos [1] +=1
-    field.current_fig.run()
-    time.sleep(0.025)
 
-#    canvas.move(ball, 0, 1)
-    
-    frame1.bind('<Left>', leftKey)
-    frame1.bind('<Right>', rightKey)
-    frame1.bind('<Up>', upKey)
-    frame1.bind('<Down>', downKey)
-    frame.bind('<space>', spKey)
-#    if block_pos [1] + BLOCK_elem_width + 200 == HEITH:
-#        break
-    
-    canvas.update()
 
- mainloop()
+
+
+                                             
+paint_pole()
+
+def paint_curr_figure():
+    # ball = canvas.create_oval(((15 - 1) * BLOCK_elem_width)/2 + 30, 0 * BLOCK_elem_width,((15 + 1) * BLOCK_elem_width)/2 + 30,(0 + 1) * BLOCK_elem_width, width = 2, fill = FILL_BLOCK_CIRCLES)
+    print "Paint c_f"                                                
+    if field.current_fig:
+        block = field.current_fig.get_figure()
+        for row in xrange(len(block)):
+            for col in xrange(len(block[0])):
+                if block[row][col] == 1:
+                    paint_pos_row = field.current_pos[0] + row
+                    paint_pos_col = field.current_pos[1] + col
+                    ball = canvas.create_oval( ((paint_pos_col) * BLOCK_elem_width), \
+                                                paint_pos_row * BLOCK_elem_width, \
+                                                ((paint_pos_col + 1) * BLOCK_elem_width), \
+                                                (paint_pos_row + 1) * BLOCK_elem_width, \
+                                                width = 2, fill = FILL_BLOCK_CIRCLES)
+paint_curr_figure() 
+                                               
+def paint_next_figure():
+    #ball = canvas.create_oval(((15 - 1) * BLOCK_elem_width)/2-30, 0 * BLOCK_elem_width,((15 + 1) * BLOCK_elem_width)/2-30,(0 + 1) * BLOCK_elem_width, width = 2, fill = FILL_NEXT_BLOCK_CIRCLES)
+    print "Paint n_f" 
+    if field.next_fig:
+        block = field.next_fig.get_figure()
+        for row in xrange(len(block)):
+            for col in xrange(len(block[0])):
+                if block[row][col] == 1:
+                    paint_pos_row = row
+                    paint_pos_col = field_width + 3 + col
+                    ball = canvas.create_oval( ((paint_pos_col) * BLOCK_elem_width * 0.7), \
+                                                paint_pos_row * BLOCK_elem_width * 0.7, \
+                                                ((paint_pos_col + 1) * BLOCK_elem_width * 0.7), \
+                                                (paint_pos_row + 1) * BLOCK_elem_width * 0.7, \
+                                                width = 2, fill = FILL_NEXT_BLOCK_CIRCLES)                                                
+paint_next_figure()
+def game_play():                                                
+    print 'Started'                                           
+    while True:
+    #    block_pos [1] +=1
+        field.run()
+        
+        # print 'field.current_fig' # test string
+        # print field.current_fig # test string
+        # print 'field.next_fig' # test string
+        # print field.next_fig # test string
+        # print 'field.current_pos' # test string
+        # print field.current_pos # test string
+        
+        # break # test string
+        
+        
+        time.sleep(0.025)
+
+    #    canvas.move(ball, 0, 1)
+        
+        frame1.bind('<Left>', leftKey)
+        frame1.bind('<Right>', rightKey)
+        frame1.bind('<Up>', upKey)
+        frame1.bind('<Down>', downKey)
+        frame1.bind('<space>', spKey)
+        
+        paint_pole()
+        paint_curr_figure()
+        paint_next_figure()
+
+        canvas.update()
+
+canvas.update()        
+Button1 = tk.Button(frame1,text = "New game", command = game_play).grid(row = 1,column = 0, sticky = "we")
+#Button1.pack()        
+               
+root.mainloop()
 
