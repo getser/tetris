@@ -158,7 +158,7 @@ class Pole(object):
                 return False
 
             num_shape_cells = len(figure.get_figure())
-            first_line = len(figure.get_figure()[0]) - 1  # last figure's colum
+            # first_line = len(figure.get_figure()[0]) - 1 #last figure's colum
 
             tested_rows = range(len(figure.get_figure()))
             tested_cols = list(reversed(range(len(figure.get_figure()[0]))))
@@ -184,7 +184,7 @@ class Pole(object):
                 return False
 
             num_shape_cells = len(figure.get_figure())
-            first_line = 0  # first figure's column
+            # first_line = 0  # first figure's column
 
             tested_rows = range(len(figure.get_figure()))
             tested_cols = range(len(figure.get_figure()[0]))
@@ -211,7 +211,7 @@ class Pole(object):
                 return False
 
             num_shape_cells = len(figure.get_figure()[0])
-            first_line = len(figure.get_figure()) - 1  # last figure's row
+            # first_line = len(figure.get_figure()) - 1  # last figure's row
 
             tested_rows = list(reversed(range(len(figure.get_figure()))))
             # print tested_rows
@@ -336,15 +336,15 @@ class Figure(object):
                 res[col][(len(res[0]) - 1) - row] = self._fig[row][col]
         self._fig = res
 
-    def rotate_l(self):
-        """
-        Rotates a figure 90 degree to the left.
-        """
-        res_rows = len(self._fig[0])
-        res_cols = len(self._fig)
-        res = [[0 for col in range(res_cols)] for row in range(res_rows)]
+    # def rotate_l(self):
+    #     """
+    #     Rotates a figure 90 degree to the left.
+    #     """
+    #     res_rows = len(self._fig[0])
+    #     res_cols = len(self._fig)
+    #     res = [[0 for col in range(res_cols)] for row in range(res_rows)]
 
-        for row in range(len(self._fig)):
-            for col in range(len(self._fig[0])):
-                res[(len(res) - 1) - col][row] = self._fig[row][col]
-        self._fig = res
+    #     for row in range(len(self._fig)):
+    #         for col in range(len(self._fig[0])):
+    #             res[(len(res) - 1) - col][row] = self._fig[row][col]
+    #     self._fig = res
