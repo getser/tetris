@@ -1,15 +1,36 @@
 import random
 
-init_figures = {'L': [[1, 0], [1, 0], [1, 1]],
-                'bL':  [[0, 1], [0, 1], [1, 1]],
-                'Z': [[1, 1, 0], [0, 1, 0], [0, 1, 1]],
-                'bZ': [[0, 1, 1], [0, 1, 0], [1, 1, 0]],
-                'T': [[1, 1, 1], [0, 1, 0], [0, 1, 0]],
-                'l': [[1], [1], [1], [1]],
-                'E': [[1, 0], [1, 1], [1, 0]],
-                '4': [[1, 0], [1, 1], [0, 1]],
-                'b4': [[0, 1], [1, 1], [1, 0]],
-                'O': [[1, 1], [1, 1]]}
+init_figures = {
+                'L': [[1, 0],
+                      [1, 0],
+                      [1, 1]],
+                'bL':  [[0, 1],
+                        [0, 1],
+                        [1, 1]],
+                'Z': [[1, 1, 0],
+                      [0, 1, 0],
+                      [0, 1, 1]],
+                'bZ': [[0, 1, 1],
+                       [0, 1, 0],
+                       [1, 1, 0]],
+                'T': [[1, 1, 1],
+                      [0, 1, 0],
+                      [0, 1, 0]],
+                'l': [[1],
+                      [1],
+                      [1],
+                      [1]],
+                'E': [[1, 0],
+                      [1, 1],
+                      [1, 0]],
+                '4': [[1, 0],
+                      [1, 1],
+                      [0, 1]],
+                'b4': [[0, 1],
+                       [1, 1],
+                       [1, 0]],
+                'O': [[1, 1],
+                      [1, 1]]}
 
 direction_steps = {'right': (0, 1),
                    'left': (0, -1),
@@ -60,10 +81,11 @@ class Pole(object):
         """
         Returns a string representation of "raw" grid.
         """
-        res = ""
-        for s in self.get_raw_grid():
-            res += (str(s) + '\n')
-        return res[:-1]
+        # res = ""
+        # for s in self.get_raw_grid():
+        #     res += (str(s) + '\n')
+        # return res[:-1]
+        return '\n'.join([' '.join(row) for row in self.get_raw_grid()])
 
     def clear_full_lines(self):
         """
@@ -72,15 +94,21 @@ class Pole(object):
         """
         full_line = [1 for col in range(self._w)]
         empty_line = [0 for col in range(self._w)]
-        count = 0
-        if full_line not in self._raw_grid:
-            return count
-        else:
-            for line in self._raw_grid:
-                if line == full_line:
-                    count += 1
-                    self._raw_grid.remove(line)
-                    self._raw_grid.insert(0, empty_line)
+        # count = 0
+        # if full_line not in self._raw_grid:
+        #     return count
+        # else:
+        #     for line in self._raw_grid:
+        #         if line == full_line:
+        #             count += 1
+        #             self._raw_grid.remove(line)
+        #             self._raw_grid.insert(0, empty_line)
+        # return count
+
+        count = self._raw_grid.count(full_line)
+        for i in xrange(count):
+            self._raw_grid.remove(full_line)
+            self._raw_grid.insert(0, empty_line)
         return count
 
     def curr_fig(self):
@@ -90,7 +118,7 @@ class Pole(object):
         # print "Im HERE, curr_fig"
         shape = init_figures[random.choice(init_figures.keys())]
         fig = Figure(shape)
-        rotate = random.randrange(4)
+        rotate = random.randrange(3)
         for i in xrange(rotate):
             fig.rotate_r()
 
